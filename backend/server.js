@@ -3,6 +3,7 @@ import express from 'express';
 import connectDB from './config/db.js';
 import { handleError } from './utils/ApiError.js';
 import router from './routes/user.routes.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const app = express();
 
 connectDB();
 app.use(express.json());
+app.use(cookieParser()); 
 app.use("/api", router);
 app.use(handleError);
 
