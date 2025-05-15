@@ -1,8 +1,11 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { toast } from 'sonner';
-export default function AdminRegisterForm() {
+
+const UserRegister = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -18,30 +21,34 @@ export default function AdminRegisterForm() {
 
   const validate = () => {
     const newErrors = {};
-    if (form.firstName.length < 2)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!form.firstName || form.firstName.length < 2) {
       newErrors.firstName = "First name must be at least 2 characters";
-    if (form.lastName.length < 2)
+    }
+    if (!form.lastName || form.lastName.length < 2) {
       newErrors.lastName = "Last name must be at least 2 characters";
-    if (!/^\S+@\S+\.\S+$/.test(form.email))
+    }
+    if (!form.email || !emailRegex.test(form.email)) {
       newErrors.email = "Invalid email address";
-    if (form.password.length < 8)
+    }
+    if (!form.password || form.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
+    }
+
     return newErrors;
   };
 
-
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
-
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('http://localhost:2845/api/admin/register', {
+        const response = await axios.post("http://localhost:2845/api/user/register", {
           FirstName: form.firstName,
           LastName: form.lastName,
           email: form.email,
-          password: form.password
+          password: form.password,
         });
 
         toast.success(response.data?.message || "Registered successfully!");
@@ -50,7 +57,7 @@ export default function AdminRegisterForm() {
           firstName: "",
           lastName: "",
           email: "",
-          password: ""
+          password: "",
         });
         setErrors({});
 
@@ -59,6 +66,7 @@ export default function AdminRegisterForm() {
         }, 1500);
 
       } catch (error) {
+        console.error(error);
         toast.error(error.response?.data?.message || "Registration failed");
       }
     } else {
@@ -68,99 +76,111 @@ export default function AdminRegisterForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f1f3ff] px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-[#eeebff] px-4">
+      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
         <h2 className="text-2xl font-bold text-center mb-2">
-          Create an Admin Account
+          Create a Customer Account
         </h2>
         <p className="text-center text-gray-500 mb-6">
-          Enter your information to register as an administrator
+          Enter your information to register as a customer
         </p>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="flex gap-4">
+        <form onSubmit={handleSubmit}>
+          <div className="flex gap-4 mb-4">
             <div className="w-1/2">
               <label className="block font-medium mb-1">First Name</label>
               <input
+                type="text"
                 name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded focus:outline-none"
-                type="text"
-
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.firstName
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-purple-400"
+                }`}
               />
               {errors.firstName && (
-                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+                <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>
               )}
             </div>
             <div className="w-1/2">
               <label className="block font-medium mb-1">Last Name</label>
               <input
+                type="text"
                 name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded focus:outline-none"
-                type="text"
-
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.lastName
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-purple-400"
+                }`}
               />
               {errors.lastName && (
-                <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                <p className="text-sm text-red-500 mt-1">{errors.lastName}</p>
               )}
             </div>
           </div>
 
-          <div>
+          <div className="mb-4">
             <label className="block font-medium mb-1">Email</label>
             <input
+              type="email"
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-              type="email"
-
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-purple-400"
+              }`}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
             )}
           </div>
 
-          <div>
+          <div className="mb-6">
             <label className="block font-medium mb-1">Password</label>
             <input
+              type="password"
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-              type="password"
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-purple-400"
+              }`}
               placeholder="********"
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
             )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
           >
             Register
           </button>
         </form>
 
-        <div className="text-center mt-6 text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account{" "}
+          <Link to="#" className="text-blue-600 hover:underline">
             Login
           </Link>
-        </div>
-
-        <div className="text-center mt-2 text-sm text-gray-600">
-          Not an admin?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register as a User
+        </p>
+        <p className="text-center text-sm text-gray-500 mt-2">
+          <Link to="/admin/register" className="hover:underline">
+            Register as an Admin
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );
-}
+};
+
+export default UserRegister;

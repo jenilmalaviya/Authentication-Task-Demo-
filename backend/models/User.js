@@ -24,9 +24,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpiry: {
+      type: Date,
+      default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
-  { Timestamp: true }
+  {
+    timestamps: true,
+  }
 );
 const User = mongoose.model("User", userSchema);
 
-export default User; 
+export default User;

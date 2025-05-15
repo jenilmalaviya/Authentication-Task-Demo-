@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const Landing = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
       <nav className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
@@ -28,7 +27,6 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* Hero section */}
       <main className="flex-grow">
         <div className="bg-auth-gradient bg-opacity-5 py-12 sm:py-16 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -46,7 +44,7 @@ const Landing = () => {
                 </button>
               </Link>
               <Link to="/admin/register">
-                <button className="inline-flex items-center justify-center rounded-md border border-primary bg-transparent text-primary text-sm text-white font-medium px-6 py-3 transition-colors hover:bg-white hover:text-black disabled:opacity-50 disabled:pointer-events-none w-full sm:w-auto">
+                <button className="inline-flex items-center justify-center rounded-md border border-primary bg-transparent text-primary text-sm  font-medium px-6 py-3 transition-colors hover:bg-white hover:text-black disabled:opacity-50 disabled:pointer-events-none w-full sm:w-auto">
                   Register as Admin
                 </button>
               </Link>
@@ -54,7 +52,6 @@ const Landing = () => {
           </div>
         </div>
 
-        {/* Features section */}
         <div className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">

@@ -3,54 +3,137 @@ import { ApiError } from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { generateOTP } from "../utils/otp.js";
+import { sendOTPEmail } from "../utils/email.js";
 
 export const adminRegister = asyncHandler(async (req, res) => {
   const { FirstName, LastName, email, password } = req.body;
 
-  if (!FirstName) throw new ApiError(400, "First name is required");
-  if (!LastName) throw new ApiError(400, "Last name is required");
-  if (!email) throw new ApiError(400, "Email is required");
-  if (!password) throw new ApiError(400, "Password is required");
+  if (!FirstName || !LastName || !email || !password) {
+    throw new ApiError(400, 'All fields are required');
+  }
+
   const existingUser = await User.findOne({ email });
 
-  if (existingUser) throw new ApiError(400, "User already exists");
+  if (existingUser && existingUser.isVerified) {
+    throw new ApiError(400, 'Email is already registered and verified');
+  }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({
-    FirstName,
-    LastName,
-    email,
-    password: hashedPassword,
-    role: "admin",
-  });
-  res.status(201).json({
-    message: "User registered successfully",
-    user,
-  });
+
+  const otp = generateOTP();
+  const otpExpiry = Date.now() + 10 * 60 * 1000;
+
+  let user;
+
+  if (existingUser) {
+    user = existingUser;
+    user.otp = otp;
+    user.otpExpiry = otpExpiry;
+  } else {
+    user = new User({
+      FirstName,
+      LastName,
+      email,
+      password: hashedPassword,
+      otp,
+      otpExpiry,
+      isVerified: false,
+      role: 'admin',
+    });
+  }
+
+  await user.save();
+
+  await sendOTPEmail(email, otp);
+
+
+  res.status(200).json({ message: 'OTP sent to email', email });
+});
+
+
+export const verifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  if (user.isVerified) {
+    throw new ApiError(400, 'User is already verified');
+  }
+
+
+  const currentTime = Date.now();
+  const otpExpiryTime = user.otpExpiry;
+
+
+  if (currentTime > otpExpiryTime) {
+    throw new ApiError(400, 'OTP has expired');
+  }
+
+
+  const receivedOtp = otp.toString().trim();
+  const storedOtp = user.otp.toString().trim();
+
+  console.log(storedOtp, "oooottttppp", receivedOtp);
+
+  if (storedOtp !== receivedOtp) {
+    throw new ApiError(400, 'Invalid OTP');
+  }
+
+  user.isVerified = true;
+  user.otp = undefined;
+  user.otpExpiry = undefined;
+  await user.save();
+
+  res.status(200).json({ message: 'Email verified. Registration complete.' });
 });
 
 export const userRegister = asyncHandler(async (req, res) => {
   const { FirstName, LastName, email, password } = req.body;
 
-  if (!FirstName) throw new ApiError(400, "First name is required");
-  if (!LastName) throw new ApiError(400, "Last name is required");
-  if (!email) throw new ApiError(400, "Email is required");
-  if (!password) throw new ApiError(400, "Password is required");
+  if (!FirstName || !LastName || !email || !password) {
+    throw new ApiError(400, 'All fields are required');
+  }
+
   const existingUser = await User.findOne({ email });
 
-  if (existingUser) throw new ApiError(400, "User already exists");
+  if (existingUser && existingUser.isVerified) {
+    throw new ApiError(400, 'Email is already registered and verified');
+  }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({
-    FirstName,
-    LastName,
-    email,
-    password: hashedPassword,
-  });
-  res.status(201).json({
-    message: "User registered successfully",
-    user,
-  });
-});
 
+  const otp = generateOTP();
+  const otpExpiry = Date.now() + 10 * 60 * 1000;
+
+  let user;
+
+  if (existingUser) {
+    user = existingUser;
+    user.otp = otp;
+    user.otpExpiry = otpExpiry;
+  } else {
+    user = new User({
+      FirstName,
+      LastName,
+      email,
+      password: hashedPassword,
+      otp,
+      otpExpiry,
+      isVerified: false,
+      role: 'user',
+    });
+  }
+
+  await user.save();
+
+  await sendOTPEmail(email, otp);
+
+
+  res.status(200).json({ message: 'OTP sent to email', email });
+});
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
