@@ -93,11 +93,10 @@ const UserRegister = () => {
                 name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                  errors.firstName
-                    ? "border-red-500 focus:ring-red-400"
-                    : "border-gray-300 focus:ring-purple-400"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.firstName
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-purple-400"
+                  }`}
               />
               {errors.firstName && (
                 <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>
@@ -110,11 +109,10 @@ const UserRegister = () => {
                 name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                  errors.lastName
-                    ? "border-red-500 focus:ring-red-400"
-                    : "border-gray-300 focus:ring-purple-400"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.lastName
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-purple-400"
+                  }`}
               />
               {errors.lastName && (
                 <p className="text-sm text-red-500 mt-1">{errors.lastName}</p>
@@ -129,11 +127,10 @@ const UserRegister = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.email
-                  ? "border-red-500 focus:ring-red-400"
-                  : "border-gray-300 focus:ring-purple-400"
-              }`}
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.email
+                ? "border-red-500 focus:ring-red-400"
+                : "border-gray-300 focus:ring-purple-400"
+                }`}
             />
             {errors.email && (
               <p className="text-sm text-red-500 mt-1">{errors.email}</p>
@@ -147,11 +144,10 @@ const UserRegister = () => {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.password
-                  ? "border-red-500 focus:ring-red-400"
-                  : "border-gray-300 focus:ring-purple-400"
-              }`}
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.password
+                ? "border-red-500 focus:ring-red-400"
+                : "border-gray-300 focus:ring-purple-400"
+                }`}
               placeholder="********"
             />
             {errors.password && (
@@ -169,13 +165,14 @@ const UserRegister = () => {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account{" "}
-          <Link to="#" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-600 hover:underline">
             Login
           </Link>
         </p>
         <p className="text-center text-sm text-gray-500 mt-2">
-          <Link to="/admin/register" className="hover:underline">
-            Register as an Admin
+          Register as an
+          <Link to="/admin/register" className="hover:underline text-blue-600">
+            Admin
           </Link>
         </p>
       </div>

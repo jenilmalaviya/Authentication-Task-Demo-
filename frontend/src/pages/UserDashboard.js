@@ -30,8 +30,17 @@ const UserDashboard = () => {
     fetchUserDetails();
   }, [navigate]);
 
-  const handleLogout = () => {
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:2845/api/logout",
+        {},
+        { withCredentials: true }
+      );
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (

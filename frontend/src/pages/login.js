@@ -34,6 +34,8 @@ const Login = () => {
             const response = await axios.post("http://localhost:2845/api/login", {
                 email,
                 password,
+            },{
+                 withCredentials: true,
             });
 
             const { message, token, user } = response.data;

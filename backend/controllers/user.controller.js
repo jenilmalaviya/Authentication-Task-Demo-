@@ -146,10 +146,14 @@ export const login = asyncHandler(async (req, res) => {
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
   if (!isPasswordCorrect) throw new ApiError(400, "Invalid credentials");
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-
-  res.status(200).cookie("token", token,).json({
+  const tokenOpen = {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax'
+  }
+  res.status(200).cookie("token", token, tokenOpen).json({
     message: "User logged in successfully",
     token,
     user,
@@ -189,7 +193,18 @@ export const getUserDetails = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({
-    message: "Admin details fetched successfully",
+    message: "User details fetched successfully",
     user,
   });
+});
+
+export const logout  = asyncHandler(async (req, res) => {
+  res
+    .clearCookie("token", {
+      httpOnly: true,
+      secure: true,        
+      sameSite: "none",
+    })
+    .status(200)
+    .json({ message: "Logged out successfully" });
 });
