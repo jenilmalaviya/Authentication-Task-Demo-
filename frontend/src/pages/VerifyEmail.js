@@ -65,7 +65,7 @@ const VerifyEmail = () => {
           <div className="mb-6">
             <label className="block text-sm font-medium mb-1">Verification Code</label>
             <input
-              type="text"
+              type="text"  
               placeholder="Enter 6-digit code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
