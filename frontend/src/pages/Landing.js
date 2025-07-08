@@ -36,7 +36,7 @@ const Landing = () => {
                 with Role-based Access
               </span>
             </h1>
-           
+
             <div className="mt-8 sm:flex sm:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Link to="/register">
                 <button className="inline-flex items-center justify-center rounded-md text-sm font-medium px-6 py-3 transition-colors bg-primary text-white hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none w-full sm:w-auto">

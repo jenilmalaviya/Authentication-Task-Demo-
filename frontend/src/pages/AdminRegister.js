@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from 'sonner';
+import { toast } from "sonner";
 export default function AdminRegisterForm() {
+  const apiUrl = process.env.BACKEND_URL;
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -29,7 +31,6 @@ export default function AdminRegisterForm() {
     return newErrors;
   };
 
-
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,11 +38,11 @@ export default function AdminRegisterForm() {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('http://localhost:2845/api/admin/register', {
+        const response = await axios.post(`${apiUrl}api/admin/register`, {
           FirstName: form.firstName,
           LastName: form.lastName,
           email: form.email,
-          password: form.password
+          password: form.password,
         });
 
         toast.success(response.data?.message || "Registered successfully!");
@@ -50,14 +51,13 @@ export default function AdminRegisterForm() {
           firstName: "",
           lastName: "",
           email: "",
-          password: ""
+          password: "",
         });
         setErrors({});
 
         setTimeout(() => {
           navigate("/verify-email", { state: { email: form.email } });
         }, 1500);
-
       } catch (error) {
         toast.error(error.response?.data?.message || "Registration failed");
       }
@@ -87,7 +87,6 @@ export default function AdminRegisterForm() {
                 onChange={handleChange}
                 className="w-full px-3 py-2 border rounded focus:outline-none"
                 type="text"
-
               />
               {errors.firstName && (
                 <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
@@ -101,7 +100,6 @@ export default function AdminRegisterForm() {
                 onChange={handleChange}
                 className="w-full px-3 py-2 border rounded focus:outline-none"
                 type="text"
-
               />
               {errors.lastName && (
                 <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
@@ -117,7 +115,6 @@ export default function AdminRegisterForm() {
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded focus:outline-none"
               type="email"
-
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>

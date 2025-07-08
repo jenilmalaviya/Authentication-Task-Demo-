@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
 
 const UserRegister = () => {
   const navigate = useNavigate();
+  const apiUrl = process.env.BACKEND_URL;
 
   const [form, setForm] = useState({
     firstName: "",
@@ -44,7 +45,7 @@ const UserRegister = () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post("http://localhost:2845/api/user/register", {
+        const response = await axios.post(`${apiUrl}api/user/register`, {
           FirstName: form.firstName,
           LastName: form.lastName,
           email: form.email,
@@ -64,7 +65,6 @@ const UserRegister = () => {
         setTimeout(() => {
           navigate("/verify-email", { state: { email: form.email } });
         }, 1500);
-
       } catch (error) {
         console.error(error);
         toast.error(error.response?.data?.message || "Registration failed");
@@ -93,10 +93,11 @@ const UserRegister = () => {
                 name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.firstName
-                  ? "border-red-500 focus:ring-red-400"
-                  : "border-gray-300 focus:ring-purple-400"
-                  }`}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.firstName
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-purple-400"
+                }`}
               />
               {errors.firstName && (
                 <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>
@@ -109,10 +110,11 @@ const UserRegister = () => {
                 name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.lastName
-                  ? "border-red-500 focus:ring-red-400"
-                  : "border-gray-300 focus:ring-purple-400"
-                  }`}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.lastName
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-purple-400"
+                }`}
               />
               {errors.lastName && (
                 <p className="text-sm text-red-500 mt-1">{errors.lastName}</p>
@@ -127,10 +129,11 @@ const UserRegister = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.email
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-purple-400"
-                }`}
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-purple-400"
+              }`}
             />
             {errors.email && (
               <p className="text-sm text-red-500 mt-1">{errors.email}</p>
@@ -144,10 +147,11 @@ const UserRegister = () => {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${errors.password
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-purple-400"
-                }`}
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-purple-400"
+              }`}
               placeholder="********"
             />
             {errors.password && (
